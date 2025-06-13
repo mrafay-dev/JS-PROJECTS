@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+	<meta charset = "UTF-8">
+	<title>Calendar Grid</title>
+	<style>
+		.calendar-grid {
+			display: grid; 
+			grid-template-columns: repeat(7, 1fr);
+		}
+		.day {
+			border: 1px solid #000000;
+			padding: 5px;
+			margin: 2px;
+			text-align: center;
+			min-height: 30px;
+		}
+		button {
+			margin: 5px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Web Calendar!</h1>
+	<div id ="monthName"></div>
+	<div class="calendar-grid">
+		<div class="day">Mon</div>
+		<div class="day">Tue</div>
+		<div class="day">Wed</div>
+		<div class="day">Thu</div>
+		<div class="day">Fri</div>
+		<div class="day">Sat</div>
+		<div class="day">Sun</div>
+	</div>
+	<div class = "calendar-grid" id="calendarDates"></div>
+
+	<button id="prevBtn">Previous</button>
+	<button id="nextBtn">Next</button>
+	
+	<script>
+		const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+		const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+		
+		let currentMonth = 0;
+
+		function getStartDay(monthIndex) {
+			let day = 0;
+			for (let i = 0;i<monthIndex;i++) {
+				day += monthLength[i];	
+			}
+			return day % 7
+		}
+
+		function renderCalendar(monthIndex) {
+			let monthName = months[monthIndex];
+			const nameDiv = document.getElementById('monthName');
+			nameDiv.textContent = monthName;
+			const calendarDates=document.getElementById('calendarDates');
+
+			calendarDates.innerHTML = "";
+			let gap = getStartDay(monthIndex);
+			let daysInMonth = monthLength[monthIndex];
+
+			for (let i = 0;i<gap;i++) {
+				const empty = document.createElement('div');
+				empty.classList.add('day');
+				calendarDates.appendChild(empty);
+			}
+
+			for (let i = 0;i<daysInMonth;i++) {
+				const day = document.createElement('div');
+				day.classList.add('day');
+				day.textContent = i+1;
+				calendarDates.appendChild(day);
+			}
+		}
+
+		renderCalendar(currentMonth);
+		document.getElementById('nextBtn').addEventListener('click', ()=> {
+			currentMonth++
+			if (currentMonth === 12) {
+				currentMonth = 0;
+			}	
+			renderCalendar(currentMonth);
+		})
+		document.getElementById('prevBtn').addEventListener('click', ()=> {
+			currentMonth--
+			if (currentMonth === -1) {
+				currentMonth = 11;
+			}	
+			renderCalendar(currentMonth);
+		})
+		
+	</script>
+</body>
+</html>
